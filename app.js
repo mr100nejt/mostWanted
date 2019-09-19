@@ -8,14 +8,13 @@ Build all of your functions for displaying and gathering information below (GUI)
 function app(people){
   let searchType = promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
   let searchResults;
-  var data = people; 
   switch(searchType){
     case 'yes':
       searchResults = searchByName(people);
-
       break;
     case 'no':
-      // TODO: search by traits
+      // TODO: search by traits 
+      //make function like above that will trigger if you call it to search by traits instead of names
       break;
       default:
     app(people); // restart app
@@ -64,6 +63,7 @@ function searchByName(people){
   people[0].Rname= firstName+lastName; 
 
   let foundPerson = people.filter(function(person){//cheking the data for the first and last you entered and returns the person
+
     if(person.firstName === firstName && person.lastName === lastName){
       return true;
     }
@@ -74,6 +74,11 @@ function searchByName(people){
   // TODO: find the person using the name they entered
   return foundPerson;
 }
+
+
+
+
+
 
 // alerts a list of people
 function displayPeople(people){
@@ -86,6 +91,7 @@ function displayPerson(person){
   // print all of the information about a person:
   // height, weight, age, name, occupation, eye color.
   let personInfo = "First Name: " + person.firstName + "\n";
+
     personInfo += "Last Name: " + person.lastName + "\n";
   // TODO: finish getting the rest of the information to display
   alert(personInfo);
@@ -93,10 +99,12 @@ function displayPerson(person){
 
 // function that prompts and validates user input
 function promptFor(question, valid){
+
   let response = prompt(question);
   do{
     
   } while(response === null || !valid(response));
+
   return response;
 }
 
