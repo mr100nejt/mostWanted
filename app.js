@@ -35,11 +35,12 @@ function mainMenu(person, people){
     return app(people); // restart
   }
 
-  let displayOption = prompt("Found " + people.firstName + " " + people.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
-
+  let displayOption = prompt("Found " + people[0].firstName + " " + people[0].lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
+//at some point this will have to become person[0].firstName and etc. then we can get the other names to filter in and not just billy bob, then the firstName and lastName will have to be fixed
   switch(displayOption){
     case "info":
     // TODO: get person's info
+    displayPerson(person);
     break;
     case "family":
     // TODO: get person's family
@@ -57,10 +58,33 @@ function mainMenu(person, people){
   }
 }
 
+
+
+function displayPerson(person){
+  // print all of the information about a person:
+  // height, weight, age, name, occupation, eye color.
+  let personInfo = "First Name: " + person.firstName + "\n";
+
+    personInfo += "Last Name: " + person.lastName + "\n";
+
+    personInfo += "gender: " + person.gender + "\n";
+
+    personInfo += "height: " + person.height + "\n";
+
+    personInfo += "weight: " + person.weight + "\n";
+
+    personInfo += "eye color: " + person.eyeColor + "\n";
+
+    personInfo += "occupation: " + person.occupation + "\n";
+
+    personInfo += "age: " + person.age + "\n";
+  // TODO: finish getting the rest of the information to display
+  alert(personInfo);
+}
+
 function searchByName(people){
   let firstName = promptFor("What is the person's first name?", chars);
   let lastName = promptFor("What is the person's last name?", chars);
-  people[0].Rname= firstName+lastName; 
 
   let foundPerson = people.filter(function(person){//cheking the data for the first and last you entered and returns the person
 
@@ -78,8 +102,6 @@ function searchByName(people){
 
 
 
-
-
 // alerts a list of people
 function displayPeople(people){
   alert(people.map(function(person){
@@ -87,15 +109,7 @@ function displayPeople(people){
   }).join("\n"));
 }
 
-function displayPerson(person){
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
-  let personInfo = "First Name: " + person.firstName + "\n";
 
-    personInfo += "Last Name: " + person.lastName + "\n";
-  // TODO: finish getting the rest of the information to display
-  alert(personInfo);
-}
 
 // function that prompts and validates user input
 function promptFor(question, valid){
@@ -117,3 +131,5 @@ function yesNo(input){
 function chars(input){
   return true; // default validation only
 }
+
+
