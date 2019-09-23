@@ -12,7 +12,7 @@ function app(people){
   switch(searchType){
     case 'yes':
        searchResults = searchByName(people);
-      addDescendants(people,searchResults)
+      
      
       break;
     case 'no':
@@ -42,19 +42,15 @@ let foundName = searchResults
 
   let displayOption = prompt("Found " + people[0].firstName + " " + people[0].lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
 
-
-
   switch(displayOption){
     case "info":
     // TODO: get person's info
-    displayPerson(person);
     break;
     case "family":
     // TODO: get person's family
     break;
     case "descendants":
-    displayPeople(searchResults[0].descendants)
-
+    displayPeople(addDescendants(people,searchResults))
     break;
     case "restart":
     app(people); // restart
@@ -66,34 +62,10 @@ let foundName = searchResults
   }
 }
 
-
-
-
-function displayPerson(person){
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
-  let personInfo = "First Name: " + person.firstName + "\n";
-
-    personInfo += "Last Name: " + person.lastName + "\n";
-
-    personInfo += "gender: " + person.gender + "\n";
-
-    personInfo += "height: " + person.height + "\n";
-
-    personInfo += "weight: " + person.weight + "\n";
-
-    personInfo += "eye color: " + person.eyeColor + "\n";
-
-    personInfo += "occupation: " + person.occupation + "\n";
-
-    personInfo += "age: " + person.age + "\n";
-  // TODO: finish getting the rest of the information to display
-  alert(personInfo);
-}
-
-function searchByName(people){
-  let firstName = promptFor("What is the person's first name?", chars);
-
+function searchByName(people,first,last){
+  
+   
+     let firstName = promptFor("What is the person's first name?", chars);
   let lastName = promptFor("What is the person's last name?", chars);
 
   let foundPerson = people.filter(function(person){//cheking the data for the first and last you entered and returns the person
@@ -112,6 +84,8 @@ function searchByName(people){
 
 
 
+
+
 // alerts a list of people
 function displayPeople(people){
   alert(people.map(function(person){
@@ -119,7 +93,15 @@ function displayPeople(people){
   }).join("\n"));
 }
 
+function displayPerson(person){
+  // print all of the information about a person:
+  // height, weight, age, name, occupation, eye color.
+  let personInfo = "First Name: " + person.firstName + "\n";
 
+    personInfo += "Last Name: " + person.lastName + "\n";
+  // TODO: finish getting the rest of the information to display
+  alert(personInfo);
+}
 
 // function that prompts and validates user input
 function promptFor(question, valid){
@@ -142,67 +124,28 @@ function chars(input){
   return true; // default validation only
 }
 
+function addDescendants(people,searchResults)
+  {
+     let foundChildren = people.filter(function(el){//cheking the data for the first and last you entered and returns the person
 
-function addDescendants(people,searchResults) {
-   let allDescendants = [];
-
-   let counter = 1;
-   for(let i = 0; i<=searchResults.length; i++){
-       
-     if(i>=searchResults.length)
-     {
-        if (counter <=1) 
-          {
-            
-             return
-          }
-       
-      }
-      let foundChildren = people.filter(function(el){
-    
-
-    if(searchResults[i].id === el.parents[0]||searchResults[i].id === el.parents[1]){
-     counter++;
+    if(searchResults[0].id === el.parents[0]||searchResults[0].id === el.parents[1]){
       return true;
     }
     else{
       return false;
     }
   })
-   if(counter > 1)
-    {
-       searchResults[i].descendants = foundChildren
-       return addDescendants(people,foundChildren)
-    }
-  if(i === 0){
-
-  
-   if(i+1 ===  searchResults.length)
+   if(foundChildren.length>0)
     {  
-     
-      if(counter > 1)
-      {return addDescendants(people,foundChildren)}
-      
+      searchResults.descendants = foundChildren
+      addDescendants(people,foundChildren)
     }
-  else if(i === searchResults.length)
-  {
-    searchResults.descendants = foundChildren
-      
-      return addDescendants(people,foundChildren)
-  }
-  }
-    else if(i>searchResults.length)
+    else if(foundChildren.length===0)
      {
         return foundChildren
      }
-   
-   
- }
-
-   
- }
-
-
+   return foundChildren;
+   }
      
     function searchByTraits(people)
     {
