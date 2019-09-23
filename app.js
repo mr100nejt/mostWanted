@@ -8,12 +8,10 @@ Build all of your functions for displaying and gathering information below (GUI)
 function app(people){
 
   let searchType = promptFor("Do you know the name of the person you are looking for? Enter 'yes' or 'no'", yesNo).toLowerCase();
-  let searchResults;
+  let searchResults; 
   switch(searchType){
     case 'yes':
-       searchResults = searchByName(people);
-      addDescendants(people,searchResults)
-     
+       searchResults = searchByName(people);     
       break;
     case 'no':
       searchByTraits(people)// TODO: search by traits 
@@ -33,16 +31,16 @@ function app(people){
 function mainMenu(searchResults, people){
 
   /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
-let foundName = searchResults
+let foundPerson = searchResults
 
   if(!people){
     alert("Could not find that individual.");
     return app(people); // restart
   }
 
-  let displayOption = prompt("Found " + people[0].firstName + " " + people[0].lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
 
-
+  let displayOption = prompt("Found " + searchResults.firstName + " " + searchResults.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
+//at some point this will have to become person[0].firstName and etc. then we can get the other names to filter in and not just billy bob, then the firstName and lastName will have to be fixed
 
   switch(displayOption){
     case "info":
@@ -51,6 +49,7 @@ let foundName = searchResults
     break;
     case "family":
     // TODO: get person's family
+    displayPeople(displayFamily(searchResults, people));
     break;
     case "descendants":
     displayPeople(searchResults[0].descendants)
@@ -91,12 +90,112 @@ function displayPerson(person){
   alert(personInfo);
 }
 
+
+function displayFamily(searchResults, people ){//need to connect function to display information
+
+// let parents = findParents(person, people, searchResults);
+// let children = findChildren(person, people, searchResults);
+// let currentSpouse = findSpouse(person, people, searchResults);
+// let siblings = findSibling(person, people, searchResults);
+
+  let personFamily =displayPeople( findParents(searchResults, people)) + "\n";
+
+    personFamily += displayPeople( findChildren(searchResults, people)) + "\n";
+
+    personFamily += displayPeople( findSpouse(searchResults, people))  + "\n";
+
+    personFamily += displayPeople( findSibling(searchResults, people) ) + "\n";
+
+   
+}
+
+// Write a function that returns the name of whatever persons id you pass in.
+
+function findParents(searchResults, people){ 
+
+  let parents = people.filter(function(person){
+    if(searchResults[0].parents[0] === person.id || searchResults[0].parents[1] === person.id) {
+      return true;
+    }
+    else{
+      return false;
+    }
+
+
+  });
+
+  return parents;
+}
+
+
+function findSpouse(searchResults, people){
+  let currentSpouse = people.filter(function(person){
+    if(searchResults[0].id === person.currentSpouse){
+      return true;
+    }
+    else{
+      return false
+    }
+  });
+  return currentSpouse;
+}
+
+
+//START of finding children
+function findChildren(searchResults, people){ //wait on descendents 
+  let children = people.filter(function(person){
+    if(searchResults[0].id === person.parents[0]||searchResults[0].id === person.parents[1]){
+    return true;
+  }
+  else{
+    return false;
+  }
+  });
+  return children;
+}
+
+
+
+function findSibling(searchResults, people){
+  let foundSibling = people.filter(function(person){
+    if(searchResults[0].parents[0] === person.parents[0]||searchResults[0].parents[0] === person.parents[1]){
+      return true;
+    }
+    else{
+      return false;
+    }
+  })
+  return foundSibling;
+}
+  //find persons parents id as array
+  //for each parent search through all people and look for people with at least one of the same parents
+  //return siblings
+//   let parent = people.filter(function(person){
+//    let array = [people];
+//     let n = array.includes(foundPerson.parents[0]) 
+  
+// let sibling = people.filter(function(person){
+//     if (foundPerson.parents === person.parents){
+//       return true;
+//     }
+//     else{
+//       return false;
+//     }
+//   })
+
+//   });
+//   return true;
+// }
+
+
+
+
 function searchByName(people){
   let firstName = promptFor("What is the person's first name?", chars);
 
   let lastName = promptFor("What is the person's last name?", chars);
 
-  let foundPerson = people.filter(function(person){//cheking the data for the first and last you entered and returns the person
+  let foundPerson = people.filter(function(person){//cheking the data for the first and last you entered and returns the person,  undefined 
 
     if(person.firstName === firstName && person.lastName === lastName){
       return true;
@@ -106,7 +205,7 @@ function searchByName(people){
     }
   })
   // TODO: find the person using the name they entered
-  return foundPerson;
+  return foundPerson; 
 }
 
 
