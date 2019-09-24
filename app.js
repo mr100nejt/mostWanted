@@ -14,21 +14,21 @@ function app(people){
        searchResults = searchByName(people);     
       break;
     case 'no':
-      searchByTraits(people)// TODO: search by traits 
+      searchByTraits(people)//function created to serch by traits. 
      
-      //make function like above that will trigger if you call it to search by traits instead of names
+    
       break;
       default:
     app(people); // restart app
       break;
   }
   
-  // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
-  mainMenu(searchResults, people);
+ 
+  mainMenu(searchResults, people);//transfers variable searchResults to the menu/and links data set 
 }
 
-// Menu function to call once you find who you are looking for
-function mainMenu(searchResults, people){
+
+function mainMenu(searchResults, people){//a function used to accese the informtion after you find your person. 
 
   /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
 let foundPerson = searchResults
@@ -45,15 +45,15 @@ let foundPerson = searchResults
   switch(displayOption){
     case "info":
     // TODO: get person's info
-    displayPerson(person);
+    displayPerson(searchResults);
     break;
-    case "family":
-    // TODO: get person's family
-    displayPeople(displayFamily(searchResults, people));
+    case "family":  
+   let b = displayFamily(searchResults,people)
+    displayPeople(b);
     break;
     case "descendants":
-    displayPeople(searchResults[0].descendants)
-
+   addDescendants(people,searchResults);
+    displayPeople(searchResults[0].descendants);
     break;
     case "restart":
     app(people); // restart
@@ -86,27 +86,35 @@ function displayPerson(person){
     personInfo += "occupation: " + person.occupation + "\n";
 
     personInfo += "age: " + person.age + "\n";
-  // TODO: finish getting the rest of the information to display
+  
   alert(personInfo);
 }
 
 
 function displayFamily(searchResults, people ){//need to connect function to display information
 
-// let parents = findParents(person, people, searchResults);
-// let children = findChildren(person, people, searchResults);
-// let currentSpouse = findSpouse(person, people, searchResults);
-// let siblings = findSibling(person, people, searchResults);
 
-  let personFamily =displayPeople( findParents(searchResults, people)) + "\n";
+  let personFamily =displayPeople( findParents(searchResults, people)) ;
 
-    personFamily += displayPeople( findChildren(searchResults, people)) + "\n";
+   let personFamily1 = displayPeople( findChildren(searchResults, people));
 
-    personFamily += displayPeople( findSpouse(searchResults, people))  + "\n";
+   let personFamily2 = displayPeople( findSpouse(searchResults, people))  ;
 
-    personFamily += displayPeople( findSibling(searchResults, people) ) + "\n";
+    let personFamily3 = displayPeople( findSibling(searchResults, people) ) ;
 
-   
+  
+  if( personFamily1.length===0)
+  {
+    personFamily1 === window.alert("no children")
+  }
+  if( personFamily2.length===0)
+  {
+    personFamily2 === window.alert("no spouse")
+  }
+  if( personFamily3.length===0)
+  {
+    personFamily3 === window.alert("no sibling")
+  }
 }
 
 // Write a function that returns the name of whatever persons id you pass in.
@@ -118,13 +126,14 @@ function findParents(searchResults, people){
       return true;
     }
     else{
+      
       return false;
     }
 
 
   });
-
-  return parents;
+ return parents;
+  
 }
 
 
@@ -134,10 +143,11 @@ function findSpouse(searchResults, people){
       return true;
     }
     else{
+     
       return false
     }
-  });
-  return currentSpouse;
+ });
+  return currentSpouse 
 }
 
 
@@ -150,8 +160,8 @@ function findChildren(searchResults, people){ //wait on descendents
   else{
     return false;
   }
-  });
-  return children;
+ });
+  return children
 }
 
 
@@ -164,28 +174,10 @@ function findSibling(searchResults, people){
     else{
       return false;
     }
-  })
-  return foundSibling;
+  });
+ return foundSibling
 }
-  //find persons parents id as array
-  //for each parent search through all people and look for people with at least one of the same parents
-  //return siblings
-//   let parent = people.filter(function(person){
-//    let array = [people];
-//     let n = array.includes(foundPerson.parents[0]) 
-  
-// let sibling = people.filter(function(person){
-//     if (foundPerson.parents === person.parents){
-//       return true;
-//     }
-//     else{
-//       return false;
-//     }
-//   })
-
-//   });
-//   return true;
-// }
+ 
 
 
 
@@ -204,8 +196,10 @@ function searchByName(people){
       return false;
     }
   })
-  // TODO: find the person using the name they entered
-  return foundPerson; 
+
+  
+  return foundPerson;
+
 }
 
 
@@ -242,7 +236,7 @@ function chars(input){
 }
 
 
-function addDescendants(people,searchResults) {
+function addDescendants(people,searchResults) {// function to find the descendants of the search. and then to check if they has grand kids 
    let allDescendants = [];
 
    let counter = 1;
@@ -250,16 +244,13 @@ function addDescendants(people,searchResults) {
        
      if(i>=searchResults.length)
      {
-        if (counter <=1) 
-          {
+        if (counter <=1){
             
              return
           }
-       
       }
-      let foundChildren = people.filter(function(el){
-    
-
+       
+ let foundChildren = people.filter(function(el){
     if(searchResults[i].id === el.parents[0]||searchResults[i].id === el.parents[1]){
      counter++;
       return true;
@@ -268,42 +259,34 @@ function addDescendants(people,searchResults) {
       return false;
     }
   })
-   if(counter > 1)
-    {
+   
+   if(counter > 1){
        searchResults[i].descendants = foundChildren
        return addDescendants(people,foundChildren)
     }
-  if(i === 0){
-
-  
-   if(i+1 ===  searchResults.length)
-    {  
+ 
+  if(i === 0){  
+   if(i+1 ===  searchResults.length) {  
      
-      if(counter > 1)
-      {return addDescendants(people,foundChildren)}
+      if(counter > 1) {
+        return addDescendants(people,foundChildren)
+      }
       
     }
-  else if(i === searchResults.length)
-  {
+  else if(i === searchResults.length){
     searchResults.descendants = foundChildren
       
       return addDescendants(people,foundChildren)
   }
   }
-    else if(i>searchResults.length)
-     {
+    else if(i>searchResults.length) {
         return foundChildren
      }
    
    
  }
-
-   
- }
-
-
      
-    function searchByTraits(people)
+    function searchByTraits(people)// created to search for someone if you only have pieces of the information. 
     {
       let p2 = prompt('what trait would you like to search by?(height,weight, age, gender,eye color,')
       switch(p2){
@@ -319,7 +302,7 @@ function addDescendants(people,searchResults) {
       return false;
     }
   }) 
-    return checkLength(foundHeight); 
+    return checkLength(foundHeight,people); 
     break;
     case "weight":
     let p4 = prompt("what is their weight?") 
@@ -334,7 +317,7 @@ function addDescendants(people,searchResults) {
     }
   }) 
    
-        return checkLength(foundWeight)
+        return checkLength(foundWeight,people)
     break;
     case "age":
   let p5 = prompt("what is their age?") 
@@ -348,7 +331,7 @@ function addDescendants(people,searchResults) {
       return false;
     }
   }) 
-   return checkLength(foundAge)
+   return checkLength(foundAge,people)
    
     break;
     case "gender":
@@ -364,7 +347,7 @@ function addDescendants(people,searchResults) {
     }
   }) 
    
-        return checkLength(foundGender)
+        return checkLength(foundGender,people)
     break;
     case "eye color":
     let p7= prompt("what is their weight?") 
@@ -379,7 +362,7 @@ function addDescendants(people,searchResults) {
     }
   }) 
     
-        return checkLength(foundEyeColor)
+        return checkLength(foundEyeColor,people)
     break;
     case "occupation":
 let p8 = prompt("what is their occupation?") 
@@ -394,7 +377,7 @@ let p8 = prompt("what is their occupation?")
     }
   }) 
     
-        return checkLength(foundOccupation)
+        return checkLength(foundOccupation,people)
   
     default:
     return mainMenu(person, people); // ask again
@@ -402,7 +385,7 @@ let p8 = prompt("what is their occupation?")
 
     }
 
-function checkLength(foundArray)
+function checkLength(foundArray,people)//a function to call to check to aee if the search returned more then one person and then to re prompt the user 
 {
   if(foundArray.length > 1)
     {
@@ -410,6 +393,10 @@ function checkLength(foundArray)
     }
     else
       {
-        return foundArray
+        return mainMenu(foundArray,people)
       }
 }
+}
+
+
+
